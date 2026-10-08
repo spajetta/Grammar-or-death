@@ -11,7 +11,7 @@ const scenes = {
   start: ['01 / THE GRAVEYARD', 'Keep the dead asleep.', 'A moonlit graveyard. The central gravestone reads: Here lies bad grammar.'],
   first_error: ['02 / SOMETHING STIRS', 'A hand reaches out. Two lives remain.', 'A zombie hand emerges from the earth in front of the central gravestone.'],
   second_error: ['03 / THE DEAD RISE', 'One life left. Make it count.', 'A zombie emerges from the earth in front of the central gravestone.'],
-  game_lost: ['04 / TOO LATE', 'The graveyard claims another grammarian.', 'The zombie has escaped its grave. Defeat in the moonlit graveyard.'],
+  game_lost: ['04 / TOO LATE', 'The graveyard claims another grammarian.', 'A zombie has escaped its grave. The artwork reads: You die! Died! Died!'],
   game_won: ['05 / A NEW DAWN', 'You lived to tell the tale.', 'Sunrise lights the graveyard. The zombie is gone and the central gravestone remains.'],
 };
 
@@ -61,7 +61,6 @@ function showQuestion() {
     feedback.textContent = '';
   }
   $('feedback').textContent = '';
-  $('feedback').className = 'feedback';
   $('check-answer').hidden = false;
   $('next-verb').hidden = true;
   $('play-again').hidden = true;
@@ -98,7 +97,6 @@ $('answer-form').addEventListener('submit', (event) => {
   }
   updateStats();
   $('check-answer').hidden = true;
-  $('feedback').className = `feedback ${result.type}`;
   const summary = result.type === 'correct' ? 'Both correct! +1 point.' : 'The dead stir… −1 point, −1 life.';
   $('feedback').textContent = `${summary} ${announcements.join(' ')} Score ${game.score} of 10. ${game.lives} ${game.lives === 1 ? 'life' : 'lives'} left.`;
   if (game.status === 'playing') {

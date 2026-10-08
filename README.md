@@ -32,7 +32,7 @@ Serve the files over HTTP; opening `index.html` directly with `file://` does not
 - The third mistake ends the game with **You died!**. Reaching 10 points ends it with **You win!** and sunrise artwork. No further submissions count.
 - **Play again** resets everything and shuffles a new deck. Questions do not repeat until the playable bank is exhausted; the two meanings of “lie” are separate questions with hints. There is also no immediate repeat across deck boundaries when the bank has multiple entries.
 
-The first answer field receives focus on each question. After submission, focus moves to **Next verb** or **Play again**. Tab navigates controls; Enter activates buttons. Visible focus, labelled fields, text-based lives and correctness, live feedback announcements, and reduced-motion support are included.
+The first answer field receives focus on each question. After submission, focus moves to **Next verb** or **Play again**. Tab navigates controls; Enter activates buttons. Visible focus, labelled fields, text-based lives and correctness, live feedback announcements, and reduced-motion support are included. Per-field feedback and corrections remain visible; the consolidated submission summary is announced to screen readers without displaying a separate feedback box.
 
 ## Edit the verb bank
 
@@ -61,10 +61,10 @@ The located source files are named without the `(1)` suffix:
 | Start | `images/start.png` | `images/web/start.webp` |
 | First mistake | `images/first_error.png` | `images/web/first_error.webp` |
 | Second mistake | `images/second_error.png` | `images/web/second_error.webp` |
-| Defeat | `images/game_lost.png` | `images/web/game_lost.webp` |
+| Defeat | `images/game_lost_new.png` | `images/web/game_lost.webp` |
 | Victory | `images/game_won.png` | `images/web/game_won.webp` |
 
-All retain their original 1536 × 1024 dimensions and composition. The WebP copies total about 3 MB instead of about 16 MB of PNGs. All five are preloaded and decoded; an already-loaded image replaces the previous scene, preserving the scene during a slow transition. Full 3:2 illustrations appear beside the controls on desktop and above them on smaller screens.
+All retain their original 1536 × 1024 dimensions and composition. The WebP copies total about 3 MB instead of about 16 MB of PNGs. All five are preloaded and decoded; an already-loaded image replaces the previous scene, preserving the scene during a slow transition. Full 3:2 illustrations appear beside the controls on desktop and above them on smaller screens. The defeat copy uses the supplied `game_lost_new.png`; the earlier `game_lost.png` is also preserved. Artwork feedback captions use 20 px text on desktop and 18 px on phones.
 
 If replacing artwork, keep matching filenames. To regenerate WebP copies from originals, optionally install Python and Pillow (`python -m pip install Pillow`), then run `python scripts/optimize_images.py`. Python and Pillow are not needed to run, build, or test the delivered game.
 

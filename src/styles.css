@@ -41,6 +41,17 @@ body {
   background-size: 5px 5px;
 }
 [hidden] { display: none !important; }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 .comic { max-width: 1536px; margin: auto; padding: 36px 40px 24px; }
 .masthead { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
 .eyebrow { color: var(--yellow); font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin: 0 0 12px; }
@@ -83,10 +94,6 @@ button { cursor: pointer; font: inherit; border-radius: 0; }
 .primary:hover { background: #ffe18b; border-color: #ffe18b; }
 .primary:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 #0008; }
 :focus-visible { outline: 3px solid #fcf5cd; outline-offset: 4px; }
-.feedback { font-size: 13px; line-height: 1.65; color: var(--paper); margin: 16px 0; }
-.feedback:empty { display: none; }
-.feedback.correct { color: var(--green); }
-.feedback.incorrect { color: #ffd0ad; }
 .panel-note { font-family: var(--comic-font); font-size: 11px; line-height: 1.7; margin: 20px 0 0; color: var(--muted); }
 #ending { border-top: 1px solid #667548; padding-top: 16px; margin-bottom: 22px; }
 #ending-heading { margin: 0 0 8px; font-family: var(--display-font); font-size: 42px; color: var(--yellow); }
@@ -270,6 +277,7 @@ figcaption {
   box-shadow: 3px 3px 0 #53482966;
 }
 .scene-number { color: #263820; }
+#scene-caption { font-size: 20px; line-height: 1.4; overflow-wrap: anywhere; }
 .play-panel {
   position: relative;
   padding: 20px;
@@ -338,11 +346,8 @@ input[aria-invalid="true"] { border-color: #ffaf8a; }
 }
 .primary:hover { border-color: #0b130c; background: #ffe394; }
 :focus-visible { outline: 3px solid #fff7da; outline-offset: 4px; }
-.feedback:not(:empty) { padding: 12px; border: 2px solid #0b130c; background: #172517; box-shadow: 3px 3px 0 #0b130c; }
-.feedback.correct { color: #d3e77f; }
-.feedback.incorrect { color: #ffd0ad; }
 .panel-note { color: #e0dfb8; font-size: 14px; }
-.feedback, .field-feedback { font-family: var(--comic-font); font-size: 15px; }
+.field-feedback { font-family: var(--comic-font); font-size: 15px; }
 #ending { border-top: 2px dashed #a6b66a; }
 #ending-heading { text-shadow: 3px 3px #0b130c; }
 footer { margin-top: 24px; padding-top: 14px; border-top: 3px solid #152015; color: #27331e; font-size: 12px; font-weight: bold; }
@@ -378,6 +383,7 @@ footer { margin-top: 24px; padding-top: 14px; border-top: 3px solid #152015; col
   .game-layout { gap: 18px; }
   .art-frame { border-width: 3px; }
   figcaption { font-size: 12px; padding: 8px; }
+  #scene-caption { font-size: 18px; }
   .play-panel { padding: 16px; }
   .panel-banner { margin: -16px -16px 18px; font-size: 21px; }
   .question-heading { padding: 14px; }
