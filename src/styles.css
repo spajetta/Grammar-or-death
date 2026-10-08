@@ -1,0 +1,401 @@
+@font-face {
+  font-family: 'Comic Neue';
+  src: url('./fonts/ComicNeue-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Comic Neue';
+  src: url('./fonts/ComicNeue-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Creepster';
+  src: url('./fonts/Creepster-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+:root {
+  --display-font: 'Creepster', 'Arial Black', sans-serif;
+  --comic-font: 'Comic Neue', 'Comic Sans MS', cursive;
+  color-scheme: dark;
+  --ink: #101813;
+  --paper: #ece3ba;
+  --green: #b7ce66;
+  --yellow: #f1cd55;
+  --muted: #b1b8a0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #101813;
+  color: var(--paper);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-width: 280px;
+  min-height: 100vh;
+  background-image: radial-gradient(#88927616 0.7px, transparent 0.7px);
+  background-size: 5px 5px;
+}
+[hidden] { display: none !important; }
+.comic { max-width: 1536px; margin: auto; padding: 36px 40px 24px; }
+.masthead { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.eyebrow { color: var(--yellow); font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin: 0 0 12px; }
+.masthead-kicker { margin-left: 4px; }
+h1 { margin: 0; font-family: var(--display-font); font-size: clamp(46px, 6.4vw, 94px); font-weight: 900; line-height: 1.03; text-transform: uppercase; letter-spacing: -1.5px; color: var(--green); text-shadow: 3px 3px 0 #000; }
+.title-or { display: inline-block; font-family: Georgia, serif; color: var(--paper); font-style: italic; font-size: .43em; text-transform: lowercase; vertical-align: middle; letter-spacing: -2px; }
+.title-death { color: var(--yellow); }
+.issue-stamp { flex-shrink: 0; margin: 0; border: 1px solid #6f7c50; padding: 12px 18px; transform: rotate(3deg); color: var(--green); font-family: var(--comic-font); text-transform: uppercase; font-size: 12px; line-height: 1.8; text-align: center; }
+.issue-stamp strong { color: var(--paper); font-weight: normal; }
+.rules { margin: 20px 0 26px; font-size: 15px; line-height: 1.6; color: #d4d8c1; }
+.game-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start; }
+.scene { margin: 0; min-width: 0; }
+.art-frame { padding: 5px; border: 1px solid #9cae64; background: #080d09; box-shadow: 5px 5px 0 #0006; }
+.art-frame img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; }
+figcaption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; font-family: var(--comic-font); font-size: 11px; line-height: 1.6; color: var(--muted); }
+.scene-number { color: var(--yellow); font-weight: bold; letter-spacing: .6px; }
+.play-panel { border: 1px solid #667548; padding: 24px; background: #18231b; box-shadow: 5px 5px 0 #0006; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 20px; margin-bottom: 24px; border-bottom: 1px solid #506040; }
+.stat-label { font-size: 10px; font-weight: bold; letter-spacing: 1.6px; text-transform: uppercase; color: var(--muted); }
+.stats p { margin: 8px 0 0; white-space: nowrap; }
+.stats strong { font-size: 32px; font-family: var(--comic-font); color: var(--yellow); }
+.target { font-size: 14px; color: var(--muted); }
+.life-marks { display: block; height: 14px; margin-top: 4px; color: var(--green); font-size: 12px; letter-spacing: 3px; }
+.question-heading { margin-bottom: 22px; }
+.question-heading .eyebrow { font-size: 10px; letter-spacing: 1.5px; }
+#verb { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 44px; line-height: 1.1; margin: 0; overflow-wrap: anywhere; color: var(--paper); }
+.verb-hint { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 8px 0 0; }
+.answer-field { margin-bottom: 16px; }
+label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
+input { width: 100%; height: 48px; border: 1px solid #788366; border-radius: 0; padding: 10px 12px; background: #0f1812; color: #f7f0d5; font: 16px Arial, sans-serif; }
+input::placeholder { color: #9da58f; font-size: 13px; }
+input[readonly], input:disabled { opacity: 1; color: var(--paper); -webkit-text-fill-color: var(--paper); }
+input[data-result="correct"] { border-color: var(--green); }
+input[aria-invalid="true"] { border-color: #eeab88; }
+.field-feedback { margin: 6px 0 0; font-size: 12px; line-height: 1.5; color: var(--green); overflow-wrap: anywhere; }
+input[aria-invalid="true"] + .field-feedback { color: #ffc0a0; }
+.field-feedback:empty { display: none; }
+button { cursor: pointer; font: inherit; border-radius: 0; }
+.primary { min-height: 48px; width: 100%; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; gap: 10px; border: 1px solid var(--yellow); background: var(--yellow); color: #12180f; font-size: 14px; font-weight: 800; box-shadow: 3px 3px 0 #0008; }
+.primary:hover { background: #ffe18b; border-color: #ffe18b; }
+.primary:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 #0008; }
+:focus-visible { outline: 3px solid #fcf5cd; outline-offset: 4px; }
+.feedback { font-size: 13px; line-height: 1.65; color: var(--paper); margin: 16px 0; }
+.feedback:empty { display: none; }
+.feedback.correct { color: var(--green); }
+.feedback.incorrect { color: #ffd0ad; }
+.panel-note { font-family: var(--comic-font); font-size: 11px; line-height: 1.7; margin: 20px 0 0; color: var(--muted); }
+#ending { border-top: 1px solid #667548; padding-top: 16px; margin-bottom: 22px; }
+#ending-heading { margin: 0 0 8px; font-family: var(--display-font); font-size: 42px; color: var(--yellow); }
+#ending-message { font-size: 14px; line-height: 1.6; margin: 0; }
+footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding-top: 24px; margin-top: 28px; border-top: 1px solid #3f4c34; color: var(--muted); font-family: var(--comic-font); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+.noscript { color: var(--yellow); }
+@media (min-width: 1500px) { .play-panel { padding: 28px; } .game-layout { grid-template-columns: minmax(0, 1fr) 370px; } }
+@media (max-width: 950px) {
+  .comic { padding: 24px; }
+  .game-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .play-panel { max-width: none; }
+  .stats { margin-bottom: 20px; }
+  .life-marks { display: inline; margin-left: 12px; }
+  .issue-stamp { display: none; }
+  h1 { font-size: clamp(40px, 8.5vw, 76px); }
+}
+@media (max-width: 480px) {
+  .comic { padding: 20px 16px; }
+  h1 { font-size: clamp(32px, 9vw, 44px); letter-spacing: -.8px; }
+  .eyebrow { font-size: 9px; letter-spacing: 1.5px; }
+  .rules { font-size: 13px; margin: 16px 0 20px; }
+  .play-panel { padding: 20px; }
+  .stats { padding-bottom: 16px; }
+  .life-marks { display: block; margin-left: 0; }
+  figcaption { font-size: 10px; margin-top: 12px; }
+  footer { font-size: 9px; line-height: 1.6; margin-top: 24px; }
+}
+/* Printed horror-comic cover: paper gutters, heavy ink and offset color plates. */
+:root {
+  --paper: #f1e2b5;
+  --green: #c1d65c;
+  --yellow: #f5ce4b;
+  --muted: #c3c6a5;
+}
+body {
+  padding: 26px 24px;
+  background-color: #171b13;
+  background-image: radial-gradient(#8f9b5633 1px, transparent 1px), linear-gradient(120deg, #080c08, #283222 55%, #0d120d);
+  background-size: 6px 6px, 100% 100%;
+}
+.comic {
+  position: relative;
+  max-width: 1450px;
+  padding: 0 22px 16px;
+  background: #dfc98a;
+  background-image: radial-gradient(#5d4d2024 .65px, transparent .65px);
+  background-size: 4px 4px;
+  border: 3px solid #080d09;
+  outline: 1px solid #b5a16e;
+  box-shadow: 10px 12px 0 #0007, 0 15px 55px #0008;
+}
+.cover-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #172015;
+  border-bottom: 3px solid #152015;
+  padding: 9px 0 7px;
+  font: 700 12px var(--comic-font);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.masthead {
+  position: relative;
+  isolation: isolate;
+  min-height: 230px;
+  padding: 20px 26px 24px;
+  gap: 28px;
+  overflow: hidden;
+  background: #1b2a20;
+  background-image: radial-gradient(#b7c75933 1px, transparent 1px), linear-gradient(165deg, #40563a, #17291e 65%);
+  background-size: 5px 5px, 100% 100%;
+  border: 4px solid #0b130c;
+  margin-top: 12px;
+  box-shadow: inset 0 0 0 2px #b5be7666;
+}
+.masthead::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: .16;
+  background: repeating-conic-gradient(from 5deg at 80% 50%, #dce6a4 0deg 3deg, transparent 3deg 14deg);
+  pointer-events: none;
+}
+.cover-title { flex: 1; min-width: 0; }
+.masthead-kicker {
+  margin: 0 0 12px 4px;
+  color: #f6df93;
+  font: 700 15px var(--comic-font);
+  letter-spacing: 2.6px;
+  text-shadow: 1px 1px #000;
+}
+h1 {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 20px;
+  font-family: var(--display-font);
+  font-size: clamp(64px, 7.4vw, 104px);
+  line-height: .95;
+  letter-spacing: 1px;
+  -webkit-text-stroke: 2px #071108;
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 #071108, 6px 6px 0 #071108, 8px 8px 0 #9da65b;
+}
+.title-grammar {
+  display: block;
+  width: 100%;
+  color: #f5d05d;
+  font-size: .75em;
+  letter-spacing: 4px;
+  transform: skew(-4deg);
+  margin-bottom: 10px;
+}
+.title-death {
+  color: #c1d65c;
+  display: inline-block;
+  transform: skew(-5deg);
+  letter-spacing: 8px;
+  font-size: 1.18em;
+}
+.title-or {
+  color: #f4d378;
+  font-family: Georgia, serif;
+  font-size: .42em;
+  letter-spacing: -2px;
+  -webkit-text-stroke: 0;
+  text-shadow: 2px 2px #000;
+  transform: rotate(-12deg);
+  padding: 0 8px 0 4px;
+}
+.cover-badge { flex: 0 0 190px; text-align: center; }
+.issue-stamp {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 180px;
+  height: 154px;
+  margin: 0 auto;
+  padding: 22px 18px;
+  transform: rotate(8deg);
+  clip-path: polygon(50% 0, 60% 10%, 75% 3%, 79% 18%, 96% 19%, 91% 36%, 100% 50%, 89% 61%, 97% 79%, 80% 82%, 75% 98%, 60% 90%, 50% 100%, 39% 90%, 24% 98%, 20% 81%, 3% 79%, 10% 62%, 0 50%, 10% 38%, 3% 20%, 21% 18%, 25% 3%, 40% 10%);
+  border: 0;
+  background: #f5ce4b;
+  color: #111b10;
+  font-family: var(--display-font);
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: .5px;
+}
+.issue-stamp span { font-size: 29px; }
+.issue-stamp strong { color: #623416; font: 700 14px var(--comic-font); margin-top: 9px; }
+.cover-warning { margin: 14px 0 0; color: #ece3ba; font: italic 800 17px Georgia, serif; line-height: 1.2; transform: rotate(-4deg); }
+.rules {
+  position: relative;
+  width: fit-content;
+  max-width: calc(100% - 6px);
+  margin: 16px 0 20px;
+  padding: 12px 16px;
+  border: 2px solid #121b11;
+  color: #152015;
+  background: #f4dc91;
+  font-family: var(--comic-font);
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.5;
+  box-shadow: 4px 4px 0 #192316;
+}
+.game-layout { grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; }
+.art-frame { padding: 0; border: 4px solid #0b130c; box-shadow: 4px 4px 0 #53482966; background: #0b130c; }
+figcaption {
+  padding: 10px 12px;
+  margin-top: 12px;
+  border: 2px solid #152015;
+  background: #f3dda1;
+  color: #21301d;
+  font-size: 13px;
+  font-weight: bold;
+  box-shadow: 3px 3px 0 #53482966;
+}
+.scene-number { color: #263820; }
+.play-panel {
+  position: relative;
+  padding: 20px;
+  border: 4px solid #0b130c;
+  background: #253725;
+  background-image: radial-gradient(#bfd16a0d .7px, transparent .7px);
+  background-size: 4px 4px;
+  box-shadow: 4px 4px 0 #53482966;
+}
+.panel-banner {
+  margin: -20px -20px 20px;
+  padding: 11px 10px;
+  border-bottom: 3px solid #0b130c;
+  color: #fbebc0;
+  background: #823a27;
+  font-family: var(--display-font);
+  font-size: 23px;
+  text-align: center;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px #21170d;
+}
+.stats { padding-bottom: 16px; margin-bottom: 24px; border-bottom: 2px dashed #a6b66a; }
+.stat-label { color: #e4dfb7; font-family: var(--comic-font); font-size: 13px; }
+.stats strong { font-family: var(--display-font); font-size: 37px; text-shadow: 2px 2px #0b130c; }
+.question-heading {
+  position: relative;
+  padding: 16px;
+  margin-bottom: 28px;
+  border: 3px solid #0b130c;
+  background: #efe2b6;
+  box-shadow: 3px 3px 0 #0b130c;
+  color: #172517;
+}
+.question-heading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  bottom: -12px;
+  left: 24px;
+  background: #efe2b6;
+  border-right: 3px solid #0b130c;
+  border-bottom: 3px solid #0b130c;
+  transform: skewY(-15deg) rotate(45deg);
+}
+.question-heading .eyebrow { color: #465126; font-size: 10px; letter-spacing: 1px; margin-bottom: 8px; }
+#verb { color: #162919; font-family: var(--display-font); font-style: normal; font-size: 45px; letter-spacing: .5px; text-transform: uppercase; }
+.verb-hint { color: #39472b; }
+label { font-family: var(--comic-font); font-size: 15px; color: #f6e6b6; }
+input { color-scheme: light; color: #172517; border: 2px solid #101b10; background: #f5ebcc; box-shadow: 2px 2px 0 #0b130c; }
+input::placeholder { color: #5d654e; }
+input[readonly], input:disabled { color: #172517; -webkit-text-fill-color: #172517; }
+input[data-result="correct"] { border-color: #c6da6a; }
+input[aria-invalid="true"] { border-color: #ffaf8a; }
+.primary {
+  border: 3px solid #0b130c;
+  padding: 10px 13px;
+  min-height: 50px;
+  color: #152015;
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  box-shadow: 4px 4px 0 #0b130c;
+}
+.primary:hover { border-color: #0b130c; background: #ffe394; }
+:focus-visible { outline: 3px solid #fff7da; outline-offset: 4px; }
+.feedback:not(:empty) { padding: 12px; border: 2px solid #0b130c; background: #172517; box-shadow: 3px 3px 0 #0b130c; }
+.feedback.correct { color: #d3e77f; }
+.feedback.incorrect { color: #ffd0ad; }
+.panel-note { color: #e0dfb8; font-size: 14px; }
+.feedback, .field-feedback { font-family: var(--comic-font); font-size: 15px; }
+#ending { border-top: 2px dashed #a6b66a; }
+#ending-heading { text-shadow: 3px 3px #0b130c; }
+footer { margin-top: 24px; padding-top: 14px; border-top: 3px solid #152015; color: #27331e; font-size: 12px; font-weight: bold; }
+.noscript { color: #172517; }
+@media (min-width: 1500px) {
+  .play-panel { padding: 24px; }
+  .panel-banner { margin: -24px -24px 20px; }
+}
+@media (max-width: 950px) {
+  body { padding: 18px; }
+  .comic { padding: 0 18px 16px; }
+  .masthead { min-height: 210px; padding: 20px; }
+  h1 { font-size: clamp(64px, 10vw, 90px); }
+  .cover-badge { flex-basis: 150px; }
+  .issue-stamp { display: flex; width: 150px; height: 132px; font-size: 18px; }
+  .issue-stamp span { font-size: 24px; }
+  .masthead-kicker { font-size: 12px; letter-spacing: 1.2px; }
+  .game-layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  body { padding: 10px; }
+  .comic { padding: 0 12px 12px; }
+  .cover-strip { font-size: 10px; letter-spacing: .6px; }
+  .cover-strip span:last-child { display: none; }
+  .masthead { min-height: 0; padding: 18px 12px 22px; gap: 10px; }
+  .masthead-kicker { font-size: 11px; letter-spacing: .8px; line-height: 1.5; }
+  h1 { font-size: clamp(44px, 12vw, 66px); gap: 0 8px; text-shadow: 2px 2px #071108, 4px 4px #071108, 6px 6px #9da65b; }
+  .title-grammar { letter-spacing: 1px; }
+  .title-death { letter-spacing: 4px; }
+  .title-or { padding-left: 0; }
+  .cover-badge { display: none; }
+  .rules { font-size: 14px; padding: 10px; margin: 14px 0 18px; }
+  .game-layout { gap: 18px; }
+  .art-frame { border-width: 3px; }
+  figcaption { font-size: 12px; padding: 8px; }
+  .play-panel { padding: 16px; }
+  .panel-banner { margin: -16px -16px 18px; font-size: 21px; }
+  .question-heading { padding: 14px; }
+  .life-marks { display: block; margin-left: 0; }
+  footer { font-size: 10px; letter-spacing: .5px; }
+}
+h1, .issue-stamp, .panel-banner, .stats strong, #verb, #ending-heading { font-weight: 400; }
+.banner-header { margin-top: 12px; }
+.banner-title {
+  display: block;
+  margin: 0;
+  font: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+}
+.banner-image { display: block; width: 100%; height: auto; aspect-ratio: 2171 / 452; object-fit: contain; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}

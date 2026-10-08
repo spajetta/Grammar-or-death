@@ -1,0 +1,17 @@
+{
+  "name": "grammar-or-death",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.js",
+    "build": "node scripts/build.js",
+    "preview": "node scripts/serve.js dist",
+    "test": "node --test tests/game.test.js",
+    "test:browser": "node --test tests/browser.test.js",
+    "check": "npm run test && npm run build && npm run test:browser"
+  },
+  "devDependencies": {
+    "playwright": "1.58.2"
+  }
+}

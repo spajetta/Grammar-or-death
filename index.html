@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101813">
+  <meta name="description" content="A spooky irregular-verb practice game. Reach 10 points and survive three mistakes.">
+  <title>Grammar or Death</title>
+  <link rel="stylesheet" href="./src/styles.css">
+  <link rel="preload" as="font" href="./src/fonts/ComicNeue-Regular.ttf" type="font/ttf" crossorigin>
+  <link rel="preload" as="font" href="./src/fonts/ComicNeue-Bold.ttf" type="font/ttf" crossorigin>
+  <link rel="preload" as="font" href="./src/fonts/Creepster-Regular.ttf" type="font/ttf" crossorigin>
+  <link rel="preload" as="image" href="./images/web/start.webp">
+  <link rel="preload" as="image" href="./images/web/first_error.webp">
+  <link rel="preload" as="image" href="./images/web/second_error.webp">
+  <link rel="preload" as="image" href="./images/web/game_lost.webp">
+  <link rel="preload" as="image" href="./images/web/game_won.webp">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <main class="comic">
+    <div class="cover-strip" aria-hidden="true"><span>The English horror comic</span><span>Read · Learn · Survive</span></div>
+    <header class="banner-header">
+      <h1 class="banner-title"><img class="banner-image" src="./images/banner_v3.png" width="2171" height="452" alt="Grammar or Death" fetchpriority="high"></h1>
+    </header>
+    <p class="rules">Reach 10 points before you lose your 3 lives. Both verb forms must be correct.</p>
+
+    <div class="game-layout">
+      <figure class="scene">
+        <div class="art-frame" id="art-frame" data-stage="start">
+          <img id="scene-image" src="./images/web/start.webp" width="1536" height="1024" alt="A moonlit graveyard. The central gravestone reads: Here lies bad grammar.">
+        </div>
+        <figcaption><span class="scene-number" id="scene-number">01 / THE GRAVEYARD</span><span id="scene-caption">Keep the dead asleep.</span></figcaption>
+      </figure>
+
+      <section class="play-panel" aria-label="Verb practice">
+        <p class="panel-banner" aria-hidden="true">The verb challenge!</p>
+        <div class="stats">
+          <div><span class="stat-label">Score</span><p><strong id="score">0</strong><span class="target"> / 10</span></p></div>
+          <div><span class="stat-label">Lives left</span><p><strong id="lives">3</strong><span class="target"> / 3</span><span class="life-marks" id="life-marks" aria-hidden="true">♥ ♥ ♥</span></p></div>
+        </div>
+        <div class="question-heading">
+          <p class="eyebrow" id="prompt">Give this verb a past</p>
+          <h2 id="verb">…</h2>
+          <p class="verb-hint" id="verb-hint" hidden></p>
+        </div>
+        <div id="ending" hidden>
+          <h2 id="ending-heading" tabindex="-1"></h2>
+          <p id="ending-message"></p>
+        </div>
+        <form id="answer-form" novalidate>
+          <div class="answer-field">
+            <label for="past-simple">Past simple</label>
+            <input id="past-simple" name="pastSimple" type="text" required autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="past-simple-feedback" placeholder="What happened?">
+            <p class="field-feedback" id="past-simple-feedback"></p>
+          </div>
+          <div class="answer-field">
+            <label for="past-participle">Past participle</label>
+            <input id="past-participle" name="pastParticiple" type="text" required autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="past-participle-feedback" placeholder="What has happened?">
+            <p class="field-feedback" id="past-participle-feedback"></p>
+          </div>
+          <button class="primary" id="check-answer" type="submit">Check answer <span aria-hidden="true">↗</span></button>
+        </form>
+        <div id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true"></div>
+        <button class="primary" id="next-verb" type="button" hidden>Next verb <span aria-hidden="true">→</span></button>
+        <button class="primary" id="play-again" type="button" hidden>Play again <span aria-hidden="true">↻</span></button>
+        <p class="panel-note" id="panel-note">Both right: +1 point.<br>A mistake: −1 point, −1 life.</p>
+      </section>
+    </div>
+    <footer><span>Every verb has a past.</span><span>Make yours a good one.</span></footer>
+    <noscript><p class="noscript">Please enable JavaScript to play Grammar or Death.</p></noscript>
+  </main>
+</body>
+</html>
