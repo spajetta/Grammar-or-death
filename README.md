@@ -54,17 +54,17 @@ To add a playable entry, provide nonempty `pastSimple` and `pastParticiple` arra
 
 ## Artwork
 
-The located source files are named without the `(1)` suffix:
+The current supplied artwork sources and their optimized game copies are:
 
 | State | Preserved original | Game copy |
 | --- | --- | --- |
-| Start | `images/start.png` | `images/web/start.webp` |
-| First mistake | `images/first_error.png` | `images/web/first_error.webp` |
-| Second mistake | `images/second_error.png` | `images/web/second_error.webp` |
-| Defeat | `images/game_lost_new.png` | `images/web/game_lost.webp` |
-| Victory | `images/game_won.png` | `images/web/game_won.webp` |
+| Start | `images/start_v2.png` | `images/web/start.webp` |
+| First mistake | `images/first_error_v2.png` | `images/web/first_error.webp` |
+| Second mistake | `images/second_error_v2.png` | `images/web/second_error.webp` |
+| Defeat | `images/game_lost_new_v2.png` | `images/web/game_lost.webp` |
+| Victory | `images/game_won_v2.png` | `images/web/game_won.webp` |
 
-All retain their original 1536 × 1024 dimensions and composition. The WebP copies total about 3 MB instead of about 16 MB of PNGs. All five are preloaded and decoded; an already-loaded image replaces the previous scene, preserving the scene during a slow transition. Full 3:2 illustrations appear beside the controls on desktop and above them on smaller screens. The defeat copy uses the supplied `game_lost_new.png`; the earlier `game_lost.png` is also preserved. Artwork feedback captions use 20 px text on desktop and 18 px on phones.
+All retain their original 1536 × 1024 dimensions and composition. WebP copies reduce download size while preserving the supplied artwork. All five are preloaded and decoded; an already-loaded image replaces the previous scene, preserving the scene during a slow transition. Full 3:2 illustrations appear beside the controls on desktop and above them on smaller screens. Earlier PNG artwork is also preserved. Artwork feedback captions use 20 px text on desktop and 18 px on phones.
 
 If replacing artwork, keep matching filenames. To regenerate WebP copies from originals, optionally install Python and Pillow (`python -m pip install Pillow`), then run `python scripts/optimize_images.py`. Python and Pillow are not needed to run, build, or test the delivered game.
 
