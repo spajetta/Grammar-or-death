@@ -24,7 +24,7 @@
     <header class="banner-header">
       <h1 class="banner-title"><img class="banner-image" src="./images/banner_v3.png" width="2171" height="452" alt="Grammar or Death" fetchpriority="high"></h1>
     </header>
-    <p class="rules">Reach 10 points before you lose your 3 lives. Both verb forms must be correct.</p>
+    <p class="rules" id="rules">Reach 10 points before you lose your 3 lives. Both verb forms must be correct.</p>
 
     <div class="game-layout">
       <figure class="scene">
@@ -36,6 +36,15 @@
 
       <section class="play-panel" aria-label="Verb practice">
         <p class="panel-banner" aria-hidden="true">The verb challenge!</p>
+        <div class="difficulty-control">
+          <label for="difficulty">Difficulty</label>
+          <select id="difficulty" aria-describedby="difficulty-help">
+            <option value="easy">Easy · past simple</option>
+            <option value="medium">Medium · past participle</option>
+            <option value="hard" selected>Hard · both forms</option>
+          </select>
+          <p id="difficulty-help">Changing difficulty starts a new game.</p>
+        </div>
         <div class="stats">
           <div><span class="stat-label">Score</span><p><strong id="score">0</strong><span class="target"> / 10</span></p></div>
           <div><span class="stat-label">Lives left</span><p><strong id="lives">3</strong><span class="target"> / 3</span><span class="life-marks" id="life-marks" aria-hidden="true">♥ ♥ ♥</span></p></div>
@@ -50,12 +59,12 @@
           <p id="ending-message"></p>
         </div>
         <form id="answer-form" novalidate>
-          <div class="answer-field">
+          <div class="answer-field" id="past-simple-field">
             <label for="past-simple">Past simple</label>
             <input id="past-simple" name="pastSimple" type="text" required autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="past-simple-feedback" placeholder="What happened?">
             <p class="field-feedback" id="past-simple-feedback"></p>
           </div>
-          <div class="answer-field">
+          <div class="answer-field" id="past-participle-field">
             <label for="past-participle">Past participle</label>
             <input id="past-participle" name="pastParticiple" type="text" required autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="past-participle-feedback" placeholder="What has happened?">
             <p class="field-feedback" id="past-participle-feedback"></p>

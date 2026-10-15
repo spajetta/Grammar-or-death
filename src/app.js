@@ -4,8 +4,13 @@ import { verbs } from './verbs.js';
 const game = new Game(verbs);
 const $ = (id) => document.getElementById(id);
 const fields = {
-  pastSimple: { input: $('past-simple'), feedback: $('past-simple-feedback'), label: 'Past simple' },
-  pastParticiple: { input: $('past-participle'), feedback: $('past-participle-feedback'), label: 'Past participle' },
+  pastSimple: { wrapper: $('past-simple-field'), input: $('past-simple'), feedback: $('past-simple-feedback'), label: 'Past simple' },
+  pastParticiple: { wrapper: $('past-participle-field'), input: $('past-participle'), feedback: $('past-participle-feedback'), label: 'Past participle' },
+};
+const instructions = {
+  easy: ['Reach 10 points before you lose your 3 lives. Fill in the past simple.', 'Right: +1 point.\nA mistake: −1 life.'],
+  medium: ['Reach 10 points before you lose your 3 lives. Fill in the past participle.', 'Right: +1 point.\nA mistake: −1 life.'],
+  hard: ['Reach 10 points before you lose your 3 lives. Both verb forms must be correct.', 'Both right: +1 point.\nA mistake: −1 point, −1 life.'],
 };
 const scenes = {
   start: ['01 / THE GRAVEYARD', 'Keep the dead asleep.', 'A moonlit graveyard. The central gravestone reads: Here lies bad grammar.'],
@@ -49,13 +54,20 @@ function updateStats() {
 }
 
 function showQuestion() {
+  $('difficulty').value = game.difficulty;
+  $('difficulty').disabled = false;
+  $('difficulty-help').textContent = 'Changing difficulty starts a new game.';
+  $('rules').textContent = instructions[game.difficulty][0];
+  $('panel-note').textContent = instructions[game.difficulty][1];
   $('verb').textContent = game.current.base[0].toUpperCase() + game.current.base.slice(1);
   $('verb-hint').textContent = game.current.hint || '';
   $('verb-hint').hidden = !game.current.hint;
-  for (const { input, feedback } of Object.values(fields)) {
+  for (const [key, { wrapper, input, feedback }] of Object.entries(fields)) {
+    const active = game.activeFields.includes(key);
+    wrapper.hidden = !active;
     input.value = '';
     input.readOnly = false;
-    input.disabled = false;
+    input.disabled = !active;
     input.removeAttribute('aria-invalid');
     input.removeAttribute('data-result');
     feedback.textContent = '';
@@ -68,7 +80,7 @@ function showQuestion() {
   $('prompt').textContent = 'Give this verb a past';
   $('panel-note').hidden = false;
   updateStats();
-  fields.pastSimple.input.focus({ preventScroll: true });
+  fields[game.activeFields[0]].input.focus({ preventScroll: true });
 }
 
 $('answer-form').addEventListener('submit', (event) => {
@@ -76,17 +88,19 @@ $('answer-form').addEventListener('submit', (event) => {
   const result = game.submit(fields.pastSimple.input.value, fields.pastParticiple.input.value);
   if (!result) return;
   if (result.type === 'validation') {
-    for (const [key, { input, feedback }] of Object.entries(fields)) {
+    for (const key of game.activeFields) {
+      const { input, feedback } = fields[key];
       const missing = result.missing.includes(key);
       input.setAttribute('aria-invalid', String(missing));
       feedback.textContent = missing ? 'Please enter a verb form.' : '';
     }
-    $('feedback').textContent = 'Fill in both verb forms. No points or lives lost.';
+    $('feedback').textContent = 'Fill in the required verb form. No points or lives lost.';
     fields[result.missing[0]].input.focus();
     return;
   }
   const announcements = [];
-  for (const [key, { input, feedback, label }] of Object.entries(fields)) {
+  for (const key of game.activeFields) {
+    const { input, feedback, label } = fields[key];
     const correct = result.correct[key];
     input.readOnly = true;
     input.setAttribute('aria-invalid', String(!correct));
@@ -97,7 +111,7 @@ $('answer-form').addEventListener('submit', (event) => {
   }
   updateStats();
   $('check-answer').hidden = true;
-  const summary = result.type === 'correct' ? 'Both correct! +1 point.' : 'The dead stir… −1 point, −1 life.';
+  const summary = result.type === 'correct' ? 'Correct! +1 point.' : game.difficulty === 'hard' ? 'The dead stir… −1 point, −1 life.' : 'The dead stir… −1 life. No points lost.';
   $('feedback').textContent = `${summary} ${announcements.join(' ')} Score ${game.score} of 10. ${game.lives} ${game.lives === 1 ? 'life' : 'lives'} left.`;
   if (game.status === 'playing') {
     $('next-verb').hidden = false;
@@ -118,4 +132,5 @@ $('answer-form').addEventListener('submit', (event) => {
 
 $('next-verb').addEventListener('click', () => { if (game.next()) showQuestion(); });
 $('play-again').addEventListener('click', () => { game.restart(); showQuestion(); });
+$('difficulty').addEventListener('change', (event) => { game.restart(event.target.value); showQuestion(); });
 showQuestion();

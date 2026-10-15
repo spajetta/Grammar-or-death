@@ -164,6 +164,46 @@ test('real browser: scoring, validation, endings, keyboard, artwork, responsive 
       await context.close();
     });
 
+    await t.test('difficulty selector changes active field, scoring, focus, and restart state', async () => {
+      const { page, context, errors } = await openGame({ viewport: { width: 390, height: 844 } }, 'wake');
+      assert.equal(await page.locator('#difficulty').inputValue(), 'hard');
+      await page.locator('#difficulty').selectOption('easy');
+      assert.equal(await page.locator('#past-simple-field').isVisible(), true);
+      assert.equal(await page.locator('#past-participle-field').isHidden(), true);
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'past-simple');
+      await page.getByRole('button', { name: 'Check answer' }).click();
+      await assertStats(page, 0, 3, 'start');
+      await page.locator('#past-simple').fill('wrong');
+      await page.locator('#past-simple').press('Enter');
+      await assertStats(page, 0, 2, 'first_error');
+      assert.match(await page.locator('#past-simple-feedback').textContent(), /Incorrect.*woke/);
+      await page.getByRole('button', { name: 'Next verb' }).click();
+      await page.locator('#past-simple').fill(' WOKE ');
+      await page.locator('#past-simple').press('Enter');
+      await assertStats(page, 1, 2, 'first_error');
+      await page.locator('#difficulty').selectOption('medium');
+      await assertStats(page, 0, 3, 'start');
+      assert.equal(await page.locator('#past-simple-field').isHidden(), true);
+      assert.equal(await page.locator('#past-participle-field').isVisible(), true);
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'past-participle');
+      await page.locator('#past-participle').fill('wrong');
+      await page.locator('#past-participle').press('Enter');
+      await assertStats(page, 0, 2, 'first_error');
+      await page.getByRole('button', { name: 'Next verb' }).click();
+      await page.locator('#past-participle').fill(' WOKEN ');
+      await page.locator('#past-participle').press('Enter');
+      await assertStats(page, 1, 2, 'first_error');
+      await page.locator('#difficulty').selectOption('hard');
+      await assertStats(page, 0, 3, 'start');
+      assert.equal(await page.locator('#past-simple-field').isVisible(), true);
+      assert.equal(await page.locator('#past-participle-field').isVisible(), true);
+      await answer(page, false);
+      await assertStats(page, -1, 2, 'first_error');
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      assert.deepEqual(errors, []);
+      await context.close();
+    });
+
     await t.test('desktop and phone layouts preserve full artwork, usable controls and reduced motion', async () => {
       for (const width of [1440, 1024, 768, 390, 320]) {
         const { page, context, errors } = await openGame({

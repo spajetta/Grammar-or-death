@@ -19,6 +19,43 @@ test('both forms correct earn exactly one point', () => {
   assert.equal(game.score, 1);
   assert.equal(game.lives, 3);
 });
+test('easy and medium check only their active tense without point penalties', () => {
+  for (const [difficulty, answer, ignored] of [
+    ['easy', ['  WOKE  ', 'wrong'], ['wrong', 'woken']],
+    ['medium', ['wrong', ' WOKEN '], ['woke', 'wrong']],
+  ]) {
+    const game = new Game([wake], Math.random, difficulty);
+    assert.equal(game.submit('', '').type, 'validation');
+    assert.equal(game.score, 0);
+    assert.equal(game.lives, 3);
+    assert.equal(game.submit(...ignored).type, 'incorrect');
+    assert.equal(game.score, 0);
+    assert.equal(game.lives, 2);
+    assert.equal(game.stage, 'first_error');
+    assert.equal(game.submit(...ignored), null);
+    game.next();
+    assert.equal(game.submit(...answer).type, 'correct');
+    assert.equal(game.score, 1);
+    assert.equal(game.lives, 2);
+    assert.equal(game.stage, 'first_error');
+  }
+});
+test('easy and medium retain ten-point victory and three-mistake defeat', () => {
+  for (const difficulty of ['easy', 'medium']) {
+    const wrong = difficulty === 'easy' ? ['wrong', ''] : ['', 'wrong'];
+    const right = difficulty === 'easy' ? ['woke', ''] : ['', 'woken'];
+    const lost = new Game([wake], Math.random, difficulty);
+    for (let i = 0; i < 3; i++) { lost.submit(...wrong); lost.next(); }
+    assert.deepEqual([lost.score, lost.lives, lost.status, lost.stage], [0, 0, 'lost', 'game_lost']);
+    const won = new Game([wake], Math.random, difficulty);
+    for (let i = 0; i < 10; i++) { won.submit(...right); won.next(); }
+    assert.deepEqual([won.score, won.lives, won.status, won.stage], [10, 3, 'won', 'game_won']);
+    won.restart();
+    assert.deepEqual([won.difficulty, won.score, won.lives, won.stage], [difficulty, 0, 3, 'start']);
+    won.restart('hard');
+    assert.deepEqual(won.activeFields, ['pastSimple', 'pastParticiple']);
+  }
+});
 test('one or both forms wrong apply only one penalty; negative scores allowed', () => {
   for (const answers of [['wrong', 'woken'], ['woke', 'wrong'], ['wrong', 'wrong']]) {
     const game = makeGame();

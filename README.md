@@ -1,6 +1,6 @@
 # Grammar or Death
 
-A spooky irregular-verb practice game. Complete both verb forms, reach 10 points, and survive three mistakes.
+A spooky irregular-verb practice game. Choose a difficulty, reach 10 points, and survive three mistakes.
 
 Plain HTML, CSS, and JavaScript modules; no runtime dependencies, backend, accounts, database, analytics, or external font requests. All gameplay happens in the browser. The five supplied illustrations are preserved in `images/`; the game loads smaller WebP copies from `images/web/`.
 
@@ -23,14 +23,15 @@ Serve the files over HTTP; opening `index.html` directly with `file://` does not
 ## Rules
 
 - Every new game starts with **0 points and 3 lives**.
-- Enter the displayed base verb's **past simple** and **past participle**, then select **Check answer** or press Enter in an answer field.
-- Both forms correct: **+1 point**. Either or both wrong: **−1 point and −1 life total** for that submission. Scores can be negative.
+- Choose **Easy** for past simple only, **Medium** for past participle only, or **Hard** for both forms. Hard is selected initially. Changing difficulty starts a fresh game.
+- Enter the active form or forms, then select **Check answer** or press Enter in an answer field.
+- Correct answer: **+1 point**. A mistake costs **one life** in every level. In Hard it also costs **one point**, so scores can be negative. A submission has only one penalty even when both Hard fields are wrong.
 - Blank or whitespace-only fields show validation and cost nothing.
 - Capitalization and leading/trailing whitespace are ignored. Enter one accepted form per field; you do not need to type all alternatives separated by a slash.
-- Submitted questions lock immediately. Field feedback stays until **Next verb**. A mistake reveals both correct forms, including accepted alternatives.
+- Submitted questions lock immediately. Field feedback stays until **Next verb**. A mistake reveals the correct active form or forms, including accepted alternatives.
 - Mistakes accumulate: the first reveals a hand; the second reveals a zombie. Correct answers never restore lives or reverse the artwork.
 - The third mistake ends the game with **You died!**. Reaching 10 points ends it with **You win!** and sunrise artwork. No further submissions count.
-- **Play again** resets everything and shuffles a new deck. Questions do not repeat until the playable bank is exhausted; the two meanings of “lie” are separate questions with hints. There is also no immediate repeat across deck boundaries when the bank has multiple entries.
+- **Play again** resets the score, lives, artwork, and deck while keeping the selected difficulty. Questions do not repeat until the playable bank is exhausted; the two meanings of “lie” are separate questions with hints. There is also no immediate repeat across deck boundaries when the bank has multiple entries.
 
 The first answer field receives focus on each question. After submission, focus moves to **Next verb** or **Play again**. Tab navigates controls; Enter activates buttons. Visible focus, labelled fields, text-based lives and correctness, live feedback announcements, and reduced-motion support are included. Per-field feedback and corrections remain visible; the consolidated submission summary is announced to screen readers without displaying a separate feedback box.
 

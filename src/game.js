@@ -1,5 +1,10 @@
 export const TARGET = 10;
 export const MAX_LIVES = 3;
+export const DIFFICULTIES = Object.freeze({
+  easy: ['pastSimple'],
+  medium: ['pastParticiple'],
+  hard: ['pastSimple', 'pastParticiple'],
+});
 export const normalize = (value) => String(value).trim().toLowerCase();
 
 export function shuffle(items, random = Math.random) {
@@ -13,14 +18,16 @@ export function shuffle(items, random = Math.random) {
 
 // The game model has no DOM dependencies, so its rules can be tested directly.
 export class Game {
-  constructor(bank, random = Math.random) {
+  constructor(bank, random = Math.random, difficulty = 'hard') {
     this.bank = bank.filter((verb) => verb.playable !== false);
     if (!this.bank.length) throw new Error('The verb bank needs at least one playable verb.');
     this.random = random;
-    this.restart();
+    this.restart(difficulty);
   }
 
-  restart() {
+  restart(difficulty = this.difficulty) {
+    if (!Object.hasOwn(DIFFICULTIES, difficulty)) throw new Error('Unknown difficulty.');
+    this.difficulty = difficulty;
     this.score = 0;
     this.mistakes = 0;
     this.status = 'playing';
@@ -32,6 +39,7 @@ export class Game {
   }
 
   get lives() { return MAX_LIVES - this.mistakes; }
+  get activeFields() { return DIFFICULTIES[this.difficulty]; }
   get stage() {
     if (this.status === 'won') return 'game_won';
     return ['start', 'first_error', 'second_error', 'game_lost'][this.mistakes];
@@ -40,13 +48,13 @@ export class Game {
   submit(pastSimple, pastParticiple) {
     if (this.locked || this.status !== 'playing') return null;
     const answers = { pastSimple: normalize(pastSimple), pastParticiple: normalize(pastParticiple) };
-    const missing = Object.keys(answers).filter((key) => !answers[key]);
+    const missing = this.activeFields.filter((key) => !answers[key]);
     if (missing.length) return { type: 'validation', missing };
-    const correct = Object.fromEntries(Object.entries(answers).map(([key, answer]) => [
-      key, this.current[key].some((accepted) => normalize(accepted) === answer),
+    const correct = Object.fromEntries(this.activeFields.map((key) => [
+      key, this.current[key].some((accepted) => normalize(accepted) === answers[key]),
     ]));
-    const success = correct.pastSimple && correct.pastParticiple;
-    this.score += success ? 1 : -1;
+    const success = this.activeFields.every((key) => correct[key]);
+    this.score += success ? 1 : this.difficulty === 'hard' ? -1 : 0;
     if (!success) this.mistakes++;
     this.locked = true;
     if (this.lives === 0) this.status = 'lost';

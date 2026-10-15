@@ -347,6 +347,21 @@ input[aria-invalid="true"] { border-color: #ffaf8a; }
 .primary:hover { border-color: #0b130c; background: #ffe394; }
 :focus-visible { outline: 3px solid #fff7da; outline-offset: 4px; }
 .panel-note { color: #e0dfb8; font-size: 14px; }
+.panel-note { white-space: pre-line; }
+.difficulty-control { margin-bottom: 18px; }
+.difficulty-control label { margin-bottom: 6px; }
+.difficulty-control select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 2px solid #0b130c;
+  border-radius: 0;
+  background: #f5ebcc;
+  color: #172517;
+  font: 700 16px var(--comic-font);
+  box-shadow: 2px 2px 0 #0b130c;
+}
+.difficulty-control p { margin: 8px 0 0; color: #e0dfb8; font: 14px/1.4 var(--comic-font); }
 .field-feedback { font-family: var(--comic-font); font-size: 15px; }
 #ending { border-top: 2px dashed #a6b66a; }
 #ending-heading { text-shadow: 3px 3px #0b130c; }
