@@ -166,8 +166,8 @@ test('real browser: scoring, validation, endings, keyboard, artwork, responsive 
 
     await t.test('difficulty selector changes active field, scoring, focus, and restart state', async () => {
       const { page, context, errors } = await openGame({ viewport: { width: 390, height: 844 } }, 'wake');
-      assert.equal(await page.locator('#difficulty').inputValue(), 'hard');
-      await page.locator('#difficulty').selectOption('easy');
+      assert.equal(await page.getByRole('radio', { name: 'Hard' }).isChecked(), true);
+      await page.getByRole('radio', { name: 'Easy' }).check();
       assert.equal(await page.locator('#past-simple-field').isVisible(), true);
       assert.equal(await page.locator('#past-participle-field').isHidden(), true);
       assert.equal(await page.evaluate(() => document.activeElement.id), 'past-simple');
@@ -181,19 +181,25 @@ test('real browser: scoring, validation, endings, keyboard, artwork, responsive 
       await page.locator('#past-simple').fill(' WOKE ');
       await page.locator('#past-simple').press('Enter');
       await assertStats(page, 1, 2, 'first_error');
-      await page.locator('#difficulty').selectOption('medium');
+      await page.getByRole('radio', { name: 'Medium' }).check();
       await assertStats(page, 0, 3, 'start');
-      assert.equal(await page.locator('#past-simple-field').isHidden(), true);
+      assert.equal(await page.locator('#past-simple-field').isVisible(), true);
       assert.equal(await page.locator('#past-participle-field').isVisible(), true);
-      assert.equal(await page.evaluate(() => document.activeElement.id), 'past-participle');
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'past-simple');
+      await page.locator('#past-simple').fill('woke');
+      await page.getByRole('button', { name: 'Check answer' }).click();
+      await assertStats(page, 0, 3, 'start');
+      await page.locator('#past-simple').fill('woke');
       await page.locator('#past-participle').fill('wrong');
       await page.locator('#past-participle').press('Enter');
       await assertStats(page, 0, 2, 'first_error');
+      assert.match(await page.locator('#past-participle-feedback').textContent(), /Incorrect.*woken/);
       await page.getByRole('button', { name: 'Next verb' }).click();
+      await page.locator('#past-simple').fill(' WOKE ');
       await page.locator('#past-participle').fill(' WOKEN ');
       await page.locator('#past-participle').press('Enter');
       await assertStats(page, 1, 2, 'first_error');
-      await page.locator('#difficulty').selectOption('hard');
+      await page.getByRole('radio', { name: 'Hard' }).check();
       await assertStats(page, 0, 3, 'start');
       assert.equal(await page.locator('#past-simple-field').isVisible(), true);
       assert.equal(await page.locator('#past-participle-field').isVisible(), true);

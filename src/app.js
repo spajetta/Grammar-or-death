@@ -9,7 +9,7 @@ const fields = {
 };
 const instructions = {
   easy: ['Reach 10 points before you lose your 3 lives. Fill in the past simple.', 'Right: +1 point.\nA mistake: −1 life.'],
-  medium: ['Reach 10 points before you lose your 3 lives. Fill in the past participle.', 'Right: +1 point.\nA mistake: −1 life.'],
+  medium: ['Reach 10 points before you lose your 3 lives. Both verb forms must be correct.', 'Both right: +1 point.\nA mistake: −1 life.'],
   hard: ['Reach 10 points before you lose your 3 lives. Both verb forms must be correct.', 'Both right: +1 point.\nA mistake: −1 point, −1 life.'],
 };
 const scenes = {
@@ -54,9 +54,7 @@ function updateStats() {
 }
 
 function showQuestion() {
-  $('difficulty').value = game.difficulty;
-  $('difficulty').disabled = false;
-  $('difficulty-help').textContent = 'Changing difficulty starts a new game.';
+  document.querySelector(`input[name="difficulty"][value="${game.difficulty}"]`).checked = true;
   $('rules').textContent = instructions[game.difficulty][0];
   $('panel-note').textContent = instructions[game.difficulty][1];
   $('verb').textContent = game.current.base[0].toUpperCase() + game.current.base.slice(1);
@@ -94,7 +92,7 @@ $('answer-form').addEventListener('submit', (event) => {
       input.setAttribute('aria-invalid', String(missing));
       feedback.textContent = missing ? 'Please enter a verb form.' : '';
     }
-    $('feedback').textContent = 'Fill in the required verb form. No points or lives lost.';
+    $('feedback').textContent = `Fill in ${game.activeFields.length === 1 ? 'the required verb form' : 'both verb forms'}. No points or lives lost.`;
     fields[result.missing[0]].input.focus();
     return;
   }
@@ -132,5 +130,10 @@ $('answer-form').addEventListener('submit', (event) => {
 
 $('next-verb').addEventListener('click', () => { if (game.next()) showQuestion(); });
 $('play-again').addEventListener('click', () => { game.restart(); showQuestion(); });
-$('difficulty').addEventListener('change', (event) => { game.restart(event.target.value); showQuestion(); });
+$('difficulty').addEventListener('change', (event) => {
+  if (event.target.matches('input[name="difficulty"]')) {
+    game.restart(event.target.value);
+    showQuestion();
+  }
+});
 showQuestion();

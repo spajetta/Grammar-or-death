@@ -23,7 +23,7 @@ Serve the files over HTTP; opening `index.html` directly with `file://` does not
 ## Rules
 
 - Every new game starts with **0 points and 3 lives**.
-- Choose **Easy** for past simple only, **Medium** for past participle only, or **Hard** for both forms. Hard is selected initially. Changing difficulty starts a fresh game.
+- Choose **Easy** for past simple only, **Medium** for both forms without losing points for mistakes, or **Hard** for both forms with a point penalty. Hard is selected initially. Changing difficulty starts a fresh game.
 - Enter the active form or forms, then select **Check answer** or press Enter in an answer field.
 - Correct answer: **+1 point**. A mistake costs **one life** in every level. In Hard it also costs **one point**, so scores can be negative. A submission has only one penalty even when both Hard fields are wrong.
 - Blank or whitespace-only fields show validation and cost nothing.

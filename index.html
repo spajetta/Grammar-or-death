@@ -36,15 +36,14 @@
 
       <section class="play-panel" aria-label="Verb practice">
         <p class="panel-banner" aria-hidden="true">The verb challenge!</p>
-        <div class="difficulty-control">
-          <label for="difficulty">Difficulty</label>
-          <select id="difficulty" aria-describedby="difficulty-help">
-            <option value="easy">Easy · past simple</option>
-            <option value="medium">Medium · past participle</option>
-            <option value="hard" selected>Hard · both forms</option>
-          </select>
-          <p id="difficulty-help">Changing difficulty starts a new game.</p>
-        </div>
+        <fieldset class="difficulty-control" id="difficulty">
+          <legend class="stat-label">Difficulty</legend>
+          <div class="difficulty-options">
+            <label><input type="radio" name="difficulty" value="easy"><span>Easy</span></label>
+            <label><input type="radio" name="difficulty" value="medium"><span>Medium</span></label>
+            <label><input type="radio" name="difficulty" value="hard" checked><span>Hard</span></label>
+          </div>
+        </fieldset>
         <div class="stats">
           <div><span class="stat-label">Score</span><p><strong id="score">0</strong><span class="target"> / 10</span></p></div>
           <div><span class="stat-label">Lives left</span><p><strong id="lives">3</strong><span class="target"> / 3</span><span class="life-marks" id="life-marks" aria-hidden="true">♥ ♥ ♥</span></p></div>

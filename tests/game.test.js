@@ -19,31 +19,36 @@ test('both forms correct earn exactly one point', () => {
   assert.equal(game.score, 1);
   assert.equal(game.lives, 3);
 });
-test('easy and medium check only their active tense without point penalties', () => {
-  for (const [difficulty, answer, ignored] of [
-    ['easy', ['  WOKE  ', 'wrong'], ['wrong', 'woken']],
-    ['medium', ['wrong', ' WOKEN '], ['woke', 'wrong']],
-  ]) {
-    const game = new Game([wake], Math.random, difficulty);
-    assert.equal(game.submit('', '').type, 'validation');
-    assert.equal(game.score, 0);
-    assert.equal(game.lives, 3);
-    assert.equal(game.submit(...ignored).type, 'incorrect');
-    assert.equal(game.score, 0);
-    assert.equal(game.lives, 2);
-    assert.equal(game.stage, 'first_error');
-    assert.equal(game.submit(...ignored), null);
+test('easy checks only past simple without a point penalty', () => {
+  const game = new Game([wake], Math.random, 'easy');
+  assert.equal(game.submit('', '').type, 'validation');
+  assert.equal(game.submit('wrong', 'woken').type, 'incorrect');
+  assert.deepEqual([game.score, game.lives, game.stage], [0, 2, 'first_error']);
+  assert.equal(game.submit('wrong', 'woken'), null);
+  game.next();
+  assert.equal(game.submit('  WOKE  ', 'wrong').type, 'correct');
+  assert.deepEqual([game.score, game.lives, game.stage], [1, 2, 'first_error']);
+});
+test('medium requires both forms and deducts only one life for a mistake', () => {
+  for (const answers of [['wrong', 'woken'], ['woke', 'wrong'], ['wrong', 'wrong']]) {
+    const game = new Game([wake], Math.random, 'medium');
+    assert.deepEqual(game.activeFields, ['pastSimple', 'pastParticiple']);
+    for (const incomplete of [['', 'woken'], ['woke', '']]) {
+      assert.equal(game.submit(...incomplete).type, 'validation');
+      assert.deepEqual([game.score, game.lives], [0, 3]);
+    }
+    assert.equal(game.submit(...answers).type, 'incorrect');
+    assert.deepEqual([game.score, game.lives, game.stage], [0, 2, 'first_error']);
+    assert.equal(game.submit(...answers), null);
     game.next();
-    assert.equal(game.submit(...answer).type, 'correct');
-    assert.equal(game.score, 1);
-    assert.equal(game.lives, 2);
-    assert.equal(game.stage, 'first_error');
+    assert.equal(game.submit(' WOKE ', ' WOKEN ').type, 'correct');
+    assert.deepEqual([game.score, game.lives, game.stage], [1, 2, 'first_error']);
   }
 });
 test('easy and medium retain ten-point victory and three-mistake defeat', () => {
   for (const difficulty of ['easy', 'medium']) {
-    const wrong = difficulty === 'easy' ? ['wrong', ''] : ['', 'wrong'];
-    const right = difficulty === 'easy' ? ['woke', ''] : ['', 'woken'];
+    const wrong = difficulty === 'easy' ? ['wrong', ''] : ['wrong', 'wrong'];
+    const right = difficulty === 'easy' ? ['woke', ''] : ['woke', 'woken'];
     const lost = new Game([wake], Math.random, difficulty);
     for (let i = 0; i < 3; i++) { lost.submit(...wrong); lost.next(); }
     assert.deepEqual([lost.score, lost.lives, lost.status, lost.stage], [0, 0, 'lost', 'game_lost']);

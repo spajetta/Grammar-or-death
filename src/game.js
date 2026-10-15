@@ -2,7 +2,7 @@ export const TARGET = 10;
 export const MAX_LIVES = 3;
 export const DIFFICULTIES = Object.freeze({
   easy: ['pastSimple'],
-  medium: ['pastParticiple'],
+  medium: ['pastSimple', 'pastParticiple'],
   hard: ['pastSimple', 'pastParticiple'],
 });
 export const normalize = (value) => String(value).trim().toLowerCase();
