@@ -1,8 +1,8 @@
 // Maintained answer bank. One object per meaning; arrays contain accepted answers.
-// Coverage: every row of Ginger's list, including its regular 'lie' entry and modals.
+// Full reference bank, including Ginger's rows plus the textbook's 'let' entry.
 // https://www.gingersoftware.com/content/grammar-rules/verbs/list-of-irregular-verbs
 // Modal verbs lack participles and are deliberately marked unplayable.
-export const verbs = [
+export const allVerbs = [
   {"base":"arise","pastSimple":["arose"],"pastParticiple":["arisen"]},
   {"base":"awake","pastSimple":["awoke","awaked"],"pastParticiple":["awoken","awaked"]},
   {"base":"be","pastSimple":["was","were"],"pastParticiple":["been"]},
@@ -71,6 +71,7 @@ export const verbs = [
   {"base":"learn","pastSimple":["learnt","learned"],"pastParticiple":["learnt","learned"]},
   {"base":"leave","pastSimple":["left"],"pastParticiple":["left"]},
   {"base":"lend","pastSimple":["lent"],"pastParticiple":["lent"]},
+  {"base":"let","pastSimple":["let"],"pastParticiple":["let"]},
   {"base":"lie","pastSimple":["lay"],"pastParticiple":["lain"],"hint":"to recline, as in bed"},
   {"base":"lie","pastSimple":["lied"],"pastParticiple":["lied"],"hint":"to not tell the truth"},
   {"base":"light","pastSimple":["lit","lighted"],"pastParticiple":["lit","lighted"]},
@@ -144,3 +145,73 @@ export const verbs = [
   {"base":"wind","pastSimple":["wound"],"pastParticiple":["wound"]},
   {"base":"write","pastSimple":["wrote"],"pastParticiple":["written"]}
 ];
+
+// Active study scope: exactly the left column of the supplied textbook, be through lie.
+// Keep an explicit list: an alphabetical range would include extra verbs and both meanings of lie.
+export const studyVerbBases = [
+  "be",
+  "beat",
+  "become",
+  "begin",
+  "bend",
+  "bet",
+  "bite",
+  "bleed",
+  "blow",
+  "break",
+  "bring",
+  "build",
+  "burn",
+  "burst",
+  "buy",
+  "catch",
+  "choose",
+  "come",
+  "cost",
+  "cut",
+  "deal",
+  "dig",
+  "do",
+  "draw",
+  "dream",
+  "drink",
+  "drive",
+  "eat",
+  "fall",
+  "feed",
+  "feel",
+  "fight",
+  "find",
+  "fly",
+  "forbid",
+  "forget",
+  "forgive",
+  "freeze",
+  "get",
+  "give",
+  "go",
+  "grow",
+  "hang",
+  "have",
+  "hear",
+  "hide",
+  "hit",
+  "hold",
+  "hurt",
+  "keep",
+  "know",
+  "lay",
+  "lead",
+  "learn",
+  "leave",
+  "lend",
+  "let",
+  "lie"
+];
+
+export const verbs = studyVerbBases.map((base) => {
+  const verb = allVerbs.find((entry) => entry.base === base &&
+    (base !== 'lie' || entry.pastParticiple.includes('lain')));
+  if (!verb || verb.playable === false) throw new Error(`Missing playable study verb: ${base}`);
+  return verb;
+});
