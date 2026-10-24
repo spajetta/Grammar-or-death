@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Game, shuffle } from '../src/game.js';
-import { verbs } from '../src/verbs.js';
+import { allVerbs as verbs, verbs as studyVerbs } from '../src/verbs.js';
 
 const wake = verbs.find((verb) => verb.base === 'wake');
 const makeGame = () => new Game([wake]);
@@ -172,8 +172,8 @@ test('shuffles without changing the bank, avoids repeats until exhaustion', () =
   assert.notDeepEqual(game.deck, firstDeck);
 });
 test('bank includes every source entry, disambiguates lie, and skips impossible modal questions', () => {
-  assert.equal(verbs.length, 140);
-  assert.equal(verbs.filter((v) => v.playable !== false).length, 135);
+  assert.equal(verbs.length, 141);
+  assert.equal(verbs.filter((v) => v.playable !== false).length, 136);
   for (const verb of verbs) {
     assert.ok(verb.base && verb.pastSimple.length);
     if (verb.playable !== false) assert.ok(verb.pastParticiple.length);
@@ -183,4 +183,26 @@ test('bank includes every source entry, disambiguates lie, and skips impossible 
   assert.deepEqual(verbs.filter((v) => v.playable === false).map((v) => v.base), ['can', 'may', 'must', 'shall', 'will']);
   const game = new Game(verbs);
   assert.ok(game.deck.every((v) => v.playable !== false));
+});
+
+test('active study bank matches exactly the textbook left column, be through lie', () => {
+  const expected = 'be beat become begin bend bet bite bleed blow break bring build burn burst buy catch choose come cost cut deal dig do draw dream drink drive eat fall feed feel fight find fly forbid forget forgive freeze get give go grow hang have hear hide hit hold hurt keep know lay lead learn leave lend let lie'.split(' ');
+  assert.deepEqual(studyVerbs.map((verb) => verb.base), expected);
+  assert.equal(studyVerbs.length, 58);
+  assert.equal(new Set(studyVerbs.map((verb) => verb.base)).size, 58);
+  assert.deepEqual(studyVerbs.find((verb) => verb.base === 'let').pastSimple, ['let']);
+  assert.deepEqual(studyVerbs.find((verb) => verb.base === 'let').pastParticiple, ['let']);
+  const lie = studyVerbs.find((verb) => verb.base === 'lie');
+  assert.deepEqual(lie.pastSimple, ['lay']);
+  assert.deepEqual(lie.pastParticiple, ['lain']);
+  for (const difficulty of ['easy', 'medium', 'hard']) {
+    const game = new Game(studyVerbs, Math.random, difficulty);
+    for (let restart = 0; restart < 5; restart++) {
+      assert.equal(game.deck.length, expected.length);
+      assert.deepEqual(game.deck.map((verb) => verb.base).sort(), [...expected].sort());
+      game.restart();
+    }
+    game.current = lie;
+    assert.equal(game.submit('lied', 'lied').type, 'incorrect');
+  }
 });
