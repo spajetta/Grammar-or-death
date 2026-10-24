@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import { startServer } from '../scripts/serve.js';
-import { verbs } from '../src/verbs.js';
+import { verbs, allVerbs } from '../src/verbs.js';
 
 test('real browser: scoring, validation, endings, keyboard, artwork, responsive layouts', async (t) => {
   const server = await startServer('dist', 0);
@@ -21,7 +21,7 @@ test('real browser: scoring, validation, endings, keyboard, artwork, responsive 
       if (forcedBase) {
         await page.route('**/src/verbs.js', (route) => route.fulfill({
           contentType: 'text/javascript',
-          body: `export const verbs = ${JSON.stringify(verbs.filter((v) => v.base === forcedBase))};`,
+          body: `export const verbs = ${JSON.stringify(allVerbs.filter((v) => v.base === forcedBase))};`,
         }));
       }
       await page.goto(url);
@@ -32,7 +32,7 @@ test('real browser: scoring, validation, endings, keyboard, artwork, responsive 
     async function answer(page, correct = true, enter = false) {
       const base = (await page.locator('#verb').textContent()).toLowerCase();
       const hint = await page.locator('#verb-hint').textContent();
-      const verb = verbs.find((v) => v.base === base && (v.hint || '') === hint);
+      const verb = allVerbs.find((v) => v.base === base && (v.hint || '') === hint);
       assert.ok(verb, `Known verb: ${base}`);
       await page.locator('#past-simple').fill(correct ? verb.pastSimple[0] : 'incorrect');
       await page.locator('#past-participle').fill(correct ? verb.pastParticiple[0] : 'incorrect');
