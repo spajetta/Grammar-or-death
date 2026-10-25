@@ -146,72 +146,10 @@ export const allVerbs = [
   {"base":"write","pastSimple":["wrote"],"pastParticiple":["written"]}
 ];
 
-// Active study scope: exactly the left column of the supplied textbook, be through lie.
-// Keep an explicit list: an alphabetical range would include extra verbs and both meanings of lie.
-export const studyVerbBases = [
-  "be",
-  "beat",
-  "become",
-  "begin",
-  "bend",
-  "bet",
-  "bite",
-  "bleed",
-  "blow",
-  "break",
-  "bring",
-  "build",
-  "burn",
-  "burst",
-  "buy",
-  "catch",
-  "choose",
-  "come",
-  "cost",
-  "cut",
-  "deal",
-  "dig",
-  "do",
-  "draw",
-  "dream",
-  "drink",
-  "drive",
-  "eat",
-  "fall",
-  "feed",
-  "feel",
-  "fight",
-  "find",
-  "fly",
-  "forbid",
-  "forget",
-  "forgive",
-  "freeze",
-  "get",
-  "give",
-  "go",
-  "grow",
-  "hang",
-  "have",
-  "hear",
-  "hide",
-  "hit",
-  "hold",
-  "hurt",
-  "keep",
-  "know",
-  "lay",
-  "lead",
-  "learn",
-  "leave",
-  "lend",
-  "let",
-  "lie"
-];
-
-export const verbs = studyVerbBases.map((base) => {
-  const verb = allVerbs.find((entry) => entry.base === base &&
-    (base !== 'lie' || entry.pastParticiple.includes('lain')));
-  if (!verb || verb.playable === false) throw new Error(`Missing playable study verb: ${base}`);
-  return verb;
-});
+// Active study scope: every playable reference entry beginning with B through L.
+// The game shuffles this bank for every difficulty and restart.
+export const verbs = allVerbs.filter((verb) =>
+  /^[b-l]/.test(verb.base) && verb.playable !== false &&
+  verb.pastSimple.length > 0 && verb.pastParticiple.length > 0
+);
+export const studyVerbBases = [...new Set(verbs.map((verb) => verb.base))];

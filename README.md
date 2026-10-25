@@ -31,13 +31,13 @@ Serve the files over HTTP; opening `index.html` directly with `file://` does not
 - Submitted questions lock immediately. Field feedback stays until **Next verb**. A mistake reveals the correct active form or forms, including accepted alternatives.
 - Mistakes accumulate: the first reveals a hand; the second reveals a zombie. Correct answers never restore lives or reverse the artwork.
 - The third mistake ends the game with **You died!**. Reaching 10 points ends it with **You win!** and sunrise artwork. No further submissions count.
-- **Play again** resets the score, lives, artwork, and deck while keeping the selected difficulty. Questions do not repeat until the playable bank is exhausted; only the textbook’s reclining meaning of “lie” (lay/lain) is asked. There is also no immediate repeat across deck boundaries when the bank has multiple entries.
+- **Play again** resets the score, lives, artwork, and deck while keeping the selected difficulty. Questions do not repeat until the playable bank is exhausted; both meanings of “lie” are separate questions with hints. There is also no immediate repeat across deck boundaries when the bank has multiple entries.
 
 The first answer field receives focus on each question. After submission, focus moves to **Next verb** or **Play again**. Tab navigates controls; Enter activates buttons. Visible focus, labelled fields, text-based lives and correctness, live feedback announcements, and reduced-motion support are included. Per-field feedback and corrections remain visible; the consolidated submission summary is announced to screen readers without displaying a separate feedback box.
 
 ## Edit the verb bank
 
-Edit **`src/verbs.js`**, independently of the interface and scoring code. The exported `verbs` bank is limited to the **58 verbs in the supplied textbook’s left column, from be through lie**, in every difficulty. `studyVerbBases` explicitly defines this selection; `allVerbs` preserves the complete reference bank. “Lie” here means to recline (lay/lain); the right-column “lie” (lied/lied) is excluded. “Let” (let/let) has been added from the textbook. Every entry explicitly lists accepted answers for each tense:
+Edit **`src/verbs.js`**, independently of the interface and scoring code. The exported `verbs` bank includes **all 70 playable entries beginning with B through L** from `allVerbs`, including **light** and **lose**, in every difficulty. Questions remain randomly shuffled; alphabetical order only defines the eligible range. Both meanings of “lie” (lay/lain and lied/lied) retain their distinguishing hints. Modal “can” remains excluded because it has no past participle. Every entry explicitly lists accepted answers for each tense:
 
 ```js
 {
@@ -49,9 +49,9 @@ Edit **`src/verbs.js`**, independently of the interface and scoring code. The ex
 
 Use lowercase forms without surrounding whitespace. Add alternatives as separate strings. An optional `hint` clarifies a meaning or pronunciation; for example the two “lie” entries distinguish reclining from telling an untruth. Alternatives such as “born/borne”, “hung/hanged”, and “struck/stricken” depend on meaning; the context-free quiz accepts both rather than inventing sentence context.
 
-The full reference bank contains **all 140 rows** from [Ginger Software's irregular-verb list](https://www.gingersoftware.com/content/grammar-rules/verbs/list-of-irregular-verbs), inspected on 8 October 2026, plus maintained British/American alternatives and the textbook’s “let” entry (**141 entries total**). This includes the source's regular “lie” (tell an untruth) entry. Five modal entries—**can, may, must, shall, will**—have no past participle, so they are retained with `playable: false`, empty participle arrays, and explanatory notes. **136 reference entries have both forms; only the 58 selected textbook entries are asked**. “Been able” is a paraphrase of “can”, not a participle of that modal, so it is not taught as one. Every playable question has two real verb forms.
+The full reference bank contains **all 140 rows** from [Ginger Software's irregular-verb list](https://www.gingersoftware.com/content/grammar-rules/verbs/list-of-irregular-verbs), inspected on 8 October 2026, plus maintained British/American alternatives and the textbook’s “let” entry (**141 entries total**). This includes the source's regular “lie” (tell an untruth) entry. Five modal entries—**can, may, must, shall, will**—have no past participle, so they are retained with `playable: false`, empty participle arrays, and explanatory notes. **136 reference entries have both forms; only the 70 B–L entries are asked**. “Been able” is a paraphrase of “can”, not a participle of that modal, so it is not taught as one. Every playable question has two real verb forms.
 
-To add a reference entry, provide nonempty `pastSimple` and `pastParticiple` arrays. Do not set `playable: false` unless the entry should be excluded. Add its base to `studyVerbBases` only if it should be asked. Update the corresponding bank and study-scope assertions in `tests/game.test.js` when intentionally changing either list.
+To add a reference entry, provide nonempty `pastSimple` and `pastParticiple` arrays. Do not set `playable: false` unless the entry should be excluded. Playable entries beginning with B through L are selected automatically; `studyVerbBases` lists their distinct base forms. Update the corresponding bank and study-scope assertions in `tests/game.test.js` when intentionally changing either list.
 
 ## Artwork
 
@@ -79,7 +79,7 @@ npm run check
 
 `npm run check` runs the model tests, builds the static output, then exercises that output with a real headless Chromium browser. Other commands:
 
-- `npm test`: 13 tests of scores, lives, negative scores, one-penalty submissions, blanks, normalization, alternatives, cumulative mistakes, exact ending thresholds, locking, restart, shuffle, and bank structure.
+- `npm test`: 17 tests of scores, lives, negative scores, one-penalty submissions, blanks, normalization, alternatives, cumulative mistakes, exact ending thresholds, locking, restart, shuffle, and bank structure.
 - `npm run build`: copies only the game and optimized artwork into `dist/`.
 - `npm run test:browser`: browser scenarios for feedback, keyboard submission/navigation, repeated submits, artwork states, victory/defeat, restarting after both endings, alternate answers, and deployment under `/Grammar-or-death/`.
 - `npm run preview`: serves the built `dist/` at the local address above.

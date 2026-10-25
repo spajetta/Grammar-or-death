@@ -185,24 +185,26 @@ test('bank includes every source entry, disambiguates lie, and skips impossible 
   assert.ok(game.deck.every((v) => v.playable !== false));
 });
 
-test('active study bank matches exactly the textbook left column, be through lie', () => {
-  const expected = 'be beat become begin bend bet bite bleed blow break bring build burn burst buy catch choose come cost cut deal dig do draw dream drink drive eat fall feed feel fight find fly forbid forget forgive freeze get give go grow hang have hear hide hit hold hurt keep know lay lead learn leave lend let lie'.split(' ');
-  assert.deepEqual(studyVerbs.map((verb) => verb.base), expected);
-  assert.equal(studyVerbs.length, 58);
-  assert.equal(new Set(studyVerbs.map((verb) => verb.base)).size, 58);
-  assert.deepEqual(studyVerbs.find((verb) => verb.base === 'let').pastSimple, ['let']);
-  assert.deepEqual(studyVerbs.find((verb) => verb.base === 'let').pastParticiple, ['let']);
-  const lie = studyVerbs.find((verb) => verb.base === 'lie');
-  assert.deepEqual(lie.pastSimple, ['lay']);
-  assert.deepEqual(lie.pastParticiple, ['lain']);
+test('active study bank includes all playable B through L entries and keeps random questions', () => {
+  const expected = verbs.filter((verb) => /^[b-l]/.test(verb.base) && verb.playable !== false);
+  assert.deepEqual(studyVerbs, expected);
+  assert.equal(studyVerbs.length, 70);
+  for (const base of ['be', 'bear', 'bind', 'breed', 'broadcast', 'cling', 'creep', 'grind', 'kneel', 'lean', 'let', 'light', 'lose']) {
+    assert.ok(studyVerbs.some((verb) => verb.base === base), base);
+  }
+  for (const base of ['arise', 'awake', 'can', 'make', 'wake', 'write']) {
+    assert.ok(!studyVerbs.some((verb) => verb.base === base), base);
+  }
+  assert.equal(studyVerbs.filter((verb) => verb.base === 'lie').length, 2);
   for (const difficulty of ['easy', 'medium', 'hard']) {
-    const game = new Game(studyVerbs, Math.random, difficulty);
+    let seed = 42;
+    const random = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    const game = new Game(studyVerbs, random, difficulty);
     for (let restart = 0; restart < 5; restart++) {
       assert.equal(game.deck.length, expected.length);
-      assert.deepEqual(game.deck.map((verb) => verb.base).sort(), [...expected].sort());
+      assert.deepEqual(new Set(game.deck), new Set(expected));
+      assert.notDeepEqual(game.deck, studyVerbs);
       game.restart();
     }
-    game.current = lie;
-    assert.equal(game.submit('lied', 'lied').type, 'incorrect');
   }
 });
